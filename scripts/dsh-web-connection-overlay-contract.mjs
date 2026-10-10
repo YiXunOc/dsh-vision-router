@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 export const WEB_CONNECTION_ROW_ID = 'connection'
 export const WEB_CONNECTION_PACKAGE = '@deepseek-ai/dsh-client-connection'
-export const WEB_RUNTIME_SERVICE = 'webRuntime'
+export const WEB_STARTUP_SERVICE = 'webStartup'
 export const WEB_SERVER_SERVICE = 'webServer'
 
 function result(status, reason, row, inject = []) {
@@ -35,10 +35,10 @@ export function classifyWebConnectionRows(rows) {
   }
 
   const inject = [...new Set(row.inject)]
-  if (!inject.includes(WEB_RUNTIME_SERVICE)) {
+  if (!inject.includes(WEB_STARTUP_SERVICE)) {
     return result(
       'dangerous-drift',
-      `official Web connection row no longer owns ${WEB_RUNTIME_SERVICE}: ${inject.join(', ')}`,
+      `official Web connection row does not own ${WEB_STARTUP_SERVICE}: ${inject.join(', ')}`,
       row,
       inject,
     )
@@ -47,14 +47,14 @@ export function classifyWebConnectionRows(rows) {
     return result(
       'retire-ready',
       inject.length === 2
-        ? 'official Web connection row now owns both webRuntime and webServer'
+        ? 'official Web connection row now owns both webStartup and webServer'
         : `official Web connection row now owns webServer plus ${inject.length - 2} additional activation dependency/dependencies`,
       row,
       inject,
     )
   }
   if (inject.length === 1) {
-    return result('shim-required', 'official Web connection row still owns only webRuntime', row, inject)
+    return result('shim-required', 'official Web connection row still owns only webStartup', row, inject)
   }
   return result(
     'dangerous-drift',

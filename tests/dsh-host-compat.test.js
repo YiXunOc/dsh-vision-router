@@ -478,18 +478,18 @@ test('web client modules wait for the official webServer carrier across supporte
 })
 
 test('connection/webServer overlay lifecycle classifies required, retire-ready, and dangerous Host drift', () => {
-  const base = { id: 'connection', name: '@deepseek-ai/dsh-client-connection', inject: ['webRuntime'] }
+  const base = { id: 'connection', name: '@deepseek-ai/dsh-client-connection', inject: ['webStartup'] }
   assert.equal(classifyWebConnectionRows([base]).status, 'shim-required')
   assert.equal(
-    classifyWebConnectionRows([{ ...base, inject: ['webRuntime', 'webServer'] }]).status,
+    classifyWebConnectionRows([{ ...base, inject: ['webStartup', 'webServer'] }]).status,
     'retire-ready',
   )
   assert.equal(
-    classifyWebConnectionRows([{ ...base, inject: ['newCarrier', 'webRuntime', 'webServer'] }]).status,
+    classifyWebConnectionRows([{ ...base, inject: ['newCarrier', 'webStartup', 'webServer'] }]).status,
     'retire-ready',
   )
   assert.equal(
-    classifyWebConnectionRows([{ ...base, inject: ['webRuntime', 'newCarrier'] }]).status,
+    classifyWebConnectionRows([{ ...base, inject: ['webStartup', 'newCarrier'] }]).status,
     'dangerous-drift',
   )
   assert.equal(
@@ -501,13 +501,14 @@ test('connection/webServer overlay lifecycle classifies required, retire-ready, 
     'dangerous-drift',
   )
   assert.equal(classifyWebConnectionRows([]).status, 'dangerous-drift')
+  assert.equal(classifyWebConnectionRows([{ ...base, inject: ['webRuntime'] }]).status, 'dangerous-drift')
 })
 
 test('web connection provider waits for both runtime trust and the Web route carrier', async () => {
   const patch = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8')
   assert.match(
     patch,
-    /- id: connection\s+name: '@deepseek-ai\/dsh-client-connection'\s+inject: \[webRuntime, webServer\]/,
+    /- id: connection\s+name: '@deepseek-ai\/dsh-client-connection'\s+inject: \[webStartup, webServer\]/,
   )
 })
 

@@ -31,7 +31,7 @@ const HOST_ROWS = [
   {
     id: 'connection',
     name: '@deepseek-ai/dsh-client-connection',
-    inject: ['webRuntime', 'webServer'],
+    inject: ['webStartup', 'webServer'],
   },
 ]
 const PLUGIN_ROW = { id: 'vision-router', name: 'dsh-vision-router' }
@@ -187,7 +187,7 @@ test('the contract fails when the identity assertion drifts from the official pa
   const findings = inspectActivationShim(
     parseBundlePatch(
       '- id: modules\n  name: "@deepseek-ai/dsh-client-modules-next"\n  inject: [webServer]\n' +
-        '- id: connection\n  name: "@deepseek-ai/dsh-client-connection"\n  inject: [webRuntime, webServer]\n',
+        '- id: connection\n  name: "@deepseek-ai/dsh-client-connection"\n  inject: [webStartup, webServer]\n',
     ),
   )
   assert.ok(findings.some((finding) => /identity assertion changed/.test(finding)))

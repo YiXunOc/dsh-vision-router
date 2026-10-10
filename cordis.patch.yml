@@ -31,7 +31,7 @@
 # 自己拥有 webServer，此 shim 必须随支持窗口审计退休，避免覆盖未来新增依赖。
 - id: connection
   name: '@deepseek-ai/dsh-client-connection'
-  inject: [webRuntime, webServer]
+  inject: [webStartup, webServer]
 
 # 挂载插件行。默认保持完整视觉工具表常驻（issue #81）：虽然渐进挂载可以
 # 少发一小段工具 schema，但图片轮首次扩展工具列表会改变请求前缀，可能让
